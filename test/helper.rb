@@ -7,7 +7,7 @@ require 'minitest/unit'
 require 'minitest/pride'
 require 'minitest/autorun'
 
-require 'sidekiq-unique-jobs'
+require 'sidekiq-multi-redis-client'
 require "sidekiq"
 require 'sidekiq/util'
 Sidekiq.logger.level = Logger::ERROR

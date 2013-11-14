@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- test/*`.split("\n")
   gem.name          = "sidekiq-multi-redis-client"
   gem.require_paths = ["lib"]
-  gem.version       = SidekiqUniqueJobs::VERSION
+  gem.version       = SidekiqMultiRedisClient::VERSION
   gem.add_dependency                  'sidekiq', '~> 2.6'
   gem.add_development_dependency      'minitest', '~> 3'
   gem.add_development_dependency      'rake'
