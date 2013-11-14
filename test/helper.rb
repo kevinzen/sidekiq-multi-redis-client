@@ -13,4 +13,5 @@ require 'sidekiq/util'
 Sidekiq.logger.level = Logger::ERROR
 
 require 'sidekiq/redis_connection'
-REDIS = Sidekiq::RedisConnection.create(:url => "redis://localhost/15", :namespace => 'testy')
+REDIS_1 = Sidekiq::RedisConnection.create(:url => "redis://localhost/15", :namespace => 'testy')
+REDIS_2 = Sidekiq::RedisConnection.create(:url => "redis://localhost/15", :namespace => 'testy')
