@@ -50,23 +50,19 @@ class TestConfiguration < MiniTest::Unit::TestCase
     end
 
     describe "figure out how many REDIS endpoints there are" do 
-      it 'determines if the job is tagged to use multi_redis_job' do
-        enabled = MultiRedisJob.get_sidekiq_options['multi_redis_job']
-        assert enabled
+      before "set things up" do
+        redis1 = { :url => 'redis://localhost:6379/12', :namespace => 'redis1_namespace' }
+        redis2 = { :url => 'redis://localhost:6380/12', :namespace => 'redis2_namespace' }
+        redi = [redis1, redis2]
+        SidekiqMultiRedisClient::Config.redi = redi
       end
 
       it 'determines if the job is tagged to use multi_redis_job' do
-        enabled = SingleRedisJob.get_sidekiq_options['multi_redis_job']
-        assert !enabled
+        redi = SidekiqMultiRedisClient::Config.redi
+        assert redi.size, 2
       end
 
-      it "determines jobs that don't include it arent multi_redis_job" do
-        enabled = PlainRedisJob.get_sidekiq_options['multi_redis_job']
-        assert !enabled
-      end
     end
-
-
 
   end
 end

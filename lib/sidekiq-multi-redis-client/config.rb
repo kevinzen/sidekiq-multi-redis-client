@@ -1,35 +1,22 @@
 module SidekiqMultiRedisClient
   class Config
-    def self.unique_prefix=(prefix)
-      @unique_prefix = prefix
+    def self.multi_redis_job=(multi_redis_job)
+      @multi_redis_job = multi_redis_job
     end
 
-    def self.unique_prefix
-      @unique_prefix || "sidekiq_unique"
+    def self.multi_redis_job
+      @multi_redis_job
     end
 
-    def self.unique_args_enabled=(enabled)
-      @unique_args_enabled = enabled
+    # Redises? An Array of redis configuration hashes.
+    # For example: { :url => 'redis://redis.example.com:7372/12', :namespace => 'mynamespace' }
+    def self.redi=(array_of_redis_config_hashes)
+      @redi = array_of_redis_config_hashes
     end
 
-    def self.unique_args_enabled?
-      @unique_args_enabled || false
+    def self.redi
+      @redi || false
     end
 
-    def self.default_expiration=(expiration)
-      @expiration = expiration
-    end
-
-    def self.default_expiration
-      @expiration || 30 * 60
-    end
-
-    def self.default_unlock_order=(order)
-      @default_unlock_order = order
-    end
-
-    def self.default_unlock_order
-      @default_unlock_order || :after_yield
-    end
   end
 end
