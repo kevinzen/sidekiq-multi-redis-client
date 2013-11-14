@@ -1,6 +1,9 @@
 # SidekiqMultiRedisClient [![Build Status](https://travis-ci.org/form26/sidekiq-unique-jobs.png?branch=master)](https://travis-ci.org/form26/sidekiq-unique-jobs)
 
-The missing unique jobs for sidekiq
+## THIS REPOSITORY IS UNDER DEVELOPMENT. DO NOT USE YET!
+
+Enable High Availability by having sidekiq clients submit jobs to more than one redis instance
+with different workers. Automatically fail over to one if the other disappears. Spread processing load across all the redis instances.
 
 ## Installation
 
