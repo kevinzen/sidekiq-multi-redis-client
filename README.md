@@ -1,4 +1,4 @@
-# SidekiqMultiRedisClient [![Build Status](https://travis-ci.org/form26/sidekiq-unique-jobs.png?branch=master)](https://travis-ci.org/form26/sidekiq-unique-jobs)
+# SidekiqMultiRedisClient [![Build Status](https://travis-ci.org/kevinzen/sidekiq-multi-redis-client.png?branch=master)](https://travis-ci.org/kevinzen/sidekiq-multi-redis-client)
 
 ## THIS REPOSITORY IS UNDER DEVELOPMENT. DO NOT USE YET!
 

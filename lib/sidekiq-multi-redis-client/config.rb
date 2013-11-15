@@ -15,7 +15,11 @@ module SidekiqMultiRedisClient
     end
 
     def self.redi
-      @redi || false
+      @redi
+    end
+
+    def self.clear_redi_params
+      @redi = nil
     end
 
   end

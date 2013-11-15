@@ -50,16 +50,45 @@ class TestConfiguration < MiniTest::Unit::TestCase
     end
 
     describe "figure out how many REDIS endpoints there are" do 
-      before "set things up" do
+      before "reset" do
+        SidekiqMultiRedisClient::Config.redi = nil
+      end
+
+      it 'knows when there are no redis instances setup' do
+        refute SidekiqMultiRedisClient::Config.redi
+      end
+
+      it 'correctly identifies the number of redis instances after setup' do
         redis1 = { :url => 'redis://localhost:6379/12', :namespace => 'redis1_namespace' }
         redis2 = { :url => 'redis://localhost:6380/12', :namespace => 'redis2_namespace' }
         redi = [redis1, redis2]
         SidekiqMultiRedisClient::Config.redi = redi
-      end
 
-      it 'determines if the job is tagged to use multi_redis_job' do
         redi = SidekiqMultiRedisClient::Config.redi
         assert redi.size, 2
+      end
+
+      it 'allows you to set / reset config parameters' do
+        redis1 = { :url => 'redis://localhost:6379/12', :namespace => 'redis1_namespace' }
+        redis2 = { :url => 'redis://localhost:6380/12', :namespace => 'redis2_namespace' }
+        redi = [redis1, redis2]
+        SidekiqMultiRedisClient::Config.redi = redi
+
+        redi = SidekiqMultiRedisClient::Config.redi
+        assert redi.size, 2
+
+        SidekiqMultiRedisClient::Config.redi = nil
+        refute SidekiqMultiRedisClient::Config.redi
+      end
+
+      it 'allows you to reset config parameters directly' do
+        redis1 = { :url => 'redis://localhost:6379/12', :namespace => 'redis1_namespace' }
+        redis2 = { :url => 'redis://localhost:6380/12', :namespace => 'redis2_namespace' }
+        redi = [redis1, redis2]
+        SidekiqMultiRedisClient::Config.redi = redi
+
+        redi = SidekiqMultiRedisClient::Config.clear_redi_params
+        refute SidekiqMultiRedisClient::Config.redi
       end
 
     end
