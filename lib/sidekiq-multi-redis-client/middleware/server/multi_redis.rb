@@ -3,7 +3,7 @@ require 'digest'
 module SidekiqMultiRedisClient
   module Middleware
     module Server
-      class UniqueJobs
+      class multi_redis
         def call(worker, item, queue)
           yield
         ensure
