@@ -3,10 +3,6 @@ require 'helper'
 class TestConfiguration < MiniTest::Unit::TestCase
   describe 'with real redis' do
     before do
-      Sidekiq.redis = REDIS_1
-      Sidekiq.redis {|c| c.flushdb rescue nil}
-      Sidekiq.redis = REDIS_2
-      Sidekiq.redis {|c| c.flushdb rescue nil}
     end
 
     describe "configuration options should be identifiable" do 
@@ -36,10 +32,11 @@ class TestConfiguration < MiniTest::Unit::TestCase
       end
 
       it 'correctly identifies the number of redis instances after setup' do
-        setup_two_redis_conns
+        setup_one_redis_conn
+        assert SidekiqMultiRedisClient::Config.redi.size, 1
 
-        redi = SidekiqMultiRedisClient::Config.redi
-        assert redi.size, 2
+        setup_two_redis_conns
+        assert SidekiqMultiRedisClient::Config.redi.size, 2
       end
 
       it 'allows you to set / reset config parameters' do

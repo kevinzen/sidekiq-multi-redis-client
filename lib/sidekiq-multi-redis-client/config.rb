@@ -28,7 +28,10 @@ module SidekiqMultiRedisClient
     end
 
     def self.next_redis_connection
-      @current_redis =  @redi.reject {|redis_conn| @current_redis == redis_conn}.first
+      if @redi.size == 1
+        return @redi.first
+      end
+      @current_redis = @redi.reject {|redis_conn| @current_redis == redis_conn}.first
     end
 
     def self.clear_redi_params

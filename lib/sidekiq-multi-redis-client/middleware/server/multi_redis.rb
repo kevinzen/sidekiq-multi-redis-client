@@ -14,6 +14,7 @@ module SidekiqMultiRedisClient
         def logger
           Sidekiq.logger
         end
+
       end
     end
   end

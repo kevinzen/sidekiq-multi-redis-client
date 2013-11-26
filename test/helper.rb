@@ -43,11 +43,60 @@ def worker_class_constantize(worker_class)
   end
 end
 
+#############
+#
+# Below here setup the redis connections you are testing with. Please don't check in 
+# changes to this section. 
+
+# I use these for testing. Change for your situation if needed.
 REDIS_1 = Sidekiq::RedisConnection.create(:url => "redis://localhost:6379/15", :namespace => 'testy')
 REDIS_2 = Sidekiq::RedisConnection.create(:url => "redis://localhost:6380/15", :namespace => 'testy')
 
-REDIS_CONNECTION_POOLS = [REDIS_1, REDIS_2]
+# This one doesn't exist
+BAD_REDIS = Sidekiq::RedisConnection.create(:url => "redis://http://10.10.10.1:9999/1", :namespace => 'testy')
+
+REDIS_1_CONNECTION_POOLS = [REDIS_1]
+REDIS_2_CONNECTION_POOLS = [REDIS_1, REDIS_2]
+
+REDIS_ONE_BAD = [BAD_REDIS]
+REDIS_ONE_GOOD_ONE_BAD = [REDIS_1, BAD_REDIS]
+
+def initialize_redis
+  Sidekiq.configure_client do |config|
+    next_redis_config = SidekiqMultiRedisClient::Config.next_redis_connection
+    config.redis = next_redis_config
+  end
+end
+
+def setup_one_redis_conn
+  SidekiqMultiRedisClient::Config.clear_redi_params
+  SidekiqMultiRedisClient::Config.redi = REDIS_1_CONNECTION_POOLS
+end
 
 def setup_two_redis_conns
-	SidekiqMultiRedisClient::Config.redi = REDIS_CONNECTION_POOLS
+	SidekiqMultiRedisClient::Config.clear_redi_params
+	SidekiqMultiRedisClient::Config.redi = REDIS_2_CONNECTION_POOLS
+	initialize_redis
 end
+
+def setup_redis_one_bad
+	SidekiqMultiRedisClient::Config.clear_redi_params
+	SidekiqMultiRedisClient::Config.redi = REDIS_ONE_BAD
+	initialize_redis
+end
+
+def setup_redis_one_good_one_bad
+	SidekiqMultiRedisClient::Config.clear_redi_params
+	SidekiqMultiRedisClient::Config.redi = REDIS_ONE_GOOD_ONE_BAD
+	initialize_redis
+end
+
+# Method for flushing redis queues between tests. 
+# 'rescue' is needed in case they don't really exist.
+def flush_redis_queues (array_of_connection_pools)
+	#array_of_connection_pools.each { |redis|  
+     # Sidekiq.redis = redis
+      #Sidekiq.redis {|c| c.flushdb rescue nil}
+  #}
+end
+
