@@ -10,22 +10,15 @@ module SidekiqMultiRedisClient
           klass = worker_class_constantize(worker_class)
           enabled = klass.get_sidekiq_options['multi_redis_job']
 
-          puts "class = #{klass.nil? ? 'nil' : klass.name}\n"
-          puts "enabled = #{enabled ? 'true' : 'false'}\n"
-
           if enabled
 
-            20.times{
-
               Sidekiq.configure_client do |config|
+                # puts config.redis { |c| c.client.inspect }
                 next_redis_config = SidekiqMultiRedisClient::Config.next_redis_connection
-                puts next_redis_config
                 config.redis = next_redis_config
-                puts config.redis { |c| c.client.inspect }
+                # puts config.redis { |c| c.client.inspect }
               end
 
-            }
-  
             yield 
           else
             yield

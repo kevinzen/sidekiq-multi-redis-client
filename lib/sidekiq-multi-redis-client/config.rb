@@ -8,11 +8,11 @@ module SidekiqMultiRedisClient
       @multi_redis_job
     end
 
-    # Redises? An Array of redis configuration hashes.
-    # For example: { :url => 'redis://redis.example.com:7372/12', :namespace => 'mynamespace' }
-    def self.redi=(array_of_redis_config_hashes)
-      @current_redis = array_of_redis_config_hashes.nil? ? nil : array_of_redis_config_hashes[0]
-      @redi = array_of_redis_config_hashes
+    # Redises? An Array of redis ConnectionPools
+    # 
+    def self.redi=(array_of_redis_connection_pools)
+      @current_redis = array_of_redis_connection_pools.nil? ? nil : array_of_redis_connection_pools[0]
+      @redi = array_of_redis_connection_pools
     end
 
     def self.redi
@@ -23,8 +23,8 @@ module SidekiqMultiRedisClient
       @current_redis
     end
 
-    def self.current_redis=(redis_connection_params)
-      @current_redis = redis_connection_params
+    def self.current_redis=(redis_connection_pool)
+      @current_redis = redis_connection_pool
     end
 
     def self.next_redis_connection

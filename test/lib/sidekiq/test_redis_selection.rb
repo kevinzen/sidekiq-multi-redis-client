@@ -18,12 +18,12 @@ class TestRedisSelection < MiniTest::Unit::TestCase
       end
 
       it 'should set the first redis instance as the current one' do
-        assert SidekiqMultiRedisClient::Config.current_redis, REDIS_CONNECTIONS[0]
+        assert SidekiqMultiRedisClient::Config.current_redis, REDIS_CONNECTION_POOLS[0]
       end
 
       it "should get the correct values for both of the redis instances" do
-        assert SidekiqMultiRedisClient::Config.redi[0], REDIS_CONNECTIONS[0]
-        assert SidekiqMultiRedisClient::Config.redi[1], REDIS_CONNECTIONS[1]
+        assert SidekiqMultiRedisClient::Config.redi[0], REDIS_CONNECTION_POOLS[0]
+        assert SidekiqMultiRedisClient::Config.redi[1], REDIS_CONNECTION_POOLS[1]
       end	
 
       it "should know when a new redis is fetched that it is the current one " do
@@ -37,15 +37,15 @@ class TestRedisSelection < MiniTest::Unit::TestCase
       	1..100.times do
 
       	  # do some extras to make sure we're not hitting different boundaries 	
-	      (1 + rand(6)).times { SidekiqMultiRedisClient::Config.next_redis_connection }
+	        (1 + rand(6)).times { SidekiqMultiRedisClient::Config.next_redis_connection }
 
-	      # then grab the next two
-	      conn1 = SidekiqMultiRedisClient::Config.next_redis_connection
+	        # then grab the next two
+	        conn1 = SidekiqMultiRedisClient::Config.next_redis_connection
       	  conn2 = SidekiqMultiRedisClient::Config.next_redis_connection
 
           # Make sure they are in the array we initialized with
-          assert_includes REDIS_CONNECTIONS, conn1
-          assert_includes REDIS_CONNECTIONS, conn2
+          assert_includes REDIS_CONNECTION_POOLS, conn1
+          assert_includes REDIS_CONNECTION_POOLS, conn2
 
           # Make sure they are different
           refute_equal conn1, conn2

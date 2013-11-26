@@ -7,14 +7,13 @@ require 'minitest/unit'
 require 'minitest/pride'
 require 'minitest/autorun'
 
-require 'sidekiq-multi-redis-client'
 require "sidekiq"
 require 'sidekiq/util'
-Sidekiq.logger.level = Logger::ERROR
-
 require 'sidekiq/redis_connection'
-REDIS_1 = Sidekiq::RedisConnection.create(:url => "redis://localhost/15", :namespace => 'testy')
-REDIS_2 = Sidekiq::RedisConnection.create(:url => "redis://localhost/15", :namespace => 'testy')
+
+require 'sidekiq-multi-redis-client'
+
+Sidekiq.logger.level = Logger::ERROR
 
 class MultiRedisJob
   include Sidekiq::Worker
@@ -36,12 +35,6 @@ class SingleRedisJob
   end
 end
 
-REDIS_CONNECTIONS = [ 
-	{ :url => 'redis://localhost:6379/12', :namespace => 'redis1_namespace' },
-    { :url => 'redis://localhost:6380/12', :namespace => 'redis2_namespace' } ]
-
-
-
 def worker_class_constantize(worker_class)
   if worker_class.is_a?(String)
     worker_class.constantize rescue worker_class
@@ -50,6 +43,11 @@ def worker_class_constantize(worker_class)
   end
 end
 
+REDIS_1 = Sidekiq::RedisConnection.create(:url => "redis://localhost:6379/15", :namespace => 'testy')
+REDIS_2 = Sidekiq::RedisConnection.create(:url => "redis://localhost:6380/15", :namespace => 'testy')
+
+REDIS_CONNECTION_POOLS = [REDIS_1, REDIS_2]
+
 def setup_two_redis_conns
-	SidekiqMultiRedisClient::Config.redi = REDIS_CONNECTIONS
+	SidekiqMultiRedisClient::Config.redi = REDIS_CONNECTION_POOLS
 end
