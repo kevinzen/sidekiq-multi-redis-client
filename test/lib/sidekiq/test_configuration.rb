@@ -4,9 +4,9 @@ class TestConfiguration < MiniTest::Unit::TestCase
   describe 'with real redis' do
     before do
       Sidekiq.redis = REDIS_1
-      Sidekiq.redis {|c| c.flushdb }
+      Sidekiq.redis {|c| c.flushdb rescue nil}
       Sidekiq.redis = REDIS_2
-      Sidekiq.redis {|c| c.flushdb }
+      Sidekiq.redis {|c| c.flushdb rescue nil}
     end
 
     describe "configuration options should be identifiable" do 
