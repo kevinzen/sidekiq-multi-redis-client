@@ -4,7 +4,7 @@ class TestRedisSelection < MiniTest::Unit::TestCase
   describe 'with real redis' do
     before do
       Sidekiq.redis = REDIS_1
-      Sidekiq.redis {|c| c.flushdb }
+      Sidekiq.redis {|c| c.flushdb rescue nil }
     end
 
     describe "should correctly identify different redis connections" do 
