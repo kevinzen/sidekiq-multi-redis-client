@@ -3,7 +3,7 @@ require 'digest'
 module SidekiqMultiRedisClient
   module Middleware
     module Server
-      class multi_redis
+      class MultiRedis
         def call(worker, item, queue)
           yield
         ensure

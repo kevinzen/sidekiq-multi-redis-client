@@ -38,5 +38,17 @@ module SidekiqMultiRedisClient
       @current_redis = @redi = nil
     end
 
+    def self.error_count
+      @error_count
+    end
+
+    def self.inc_error_count
+      @error_count = @error_count + 1
+    end
+
+    def self.reset_error_count
+      @error_count = 0
+    end
+
   end
 end

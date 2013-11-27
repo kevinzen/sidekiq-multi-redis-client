@@ -6,13 +6,11 @@ class TestFailedConnections < MiniTest::Unit::TestCase
     end
 
     describe "should correctly know when one of the redis conns is bad" do 
-	  
       it 'should know there are two redis connections' do
         setup_redis_one_bad
         mw = SidekiqMultiRedisClient::Middleware::Client::MultiRedis.new
         mw.call(MultiRedisJob, nil, nil) { }
       end
-
     end
 
   end

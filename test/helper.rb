@@ -43,6 +43,29 @@ def worker_class_constantize(worker_class)
   end
 end
 
+def mock_redis
+  @redis = Minitest::Mock.new
+  def @redis.multi; [yield] * 2 if block_given?; end
+  def @redis.set(*); true; end
+  def @redis.sadd(*); true; end
+  def @redis.srem(*); true; end
+  def @redis.get(*); nil; end
+  def @redis.del(*); nil; end
+  def @redis.incrby(*); nil; end
+  def @redis.setex(*); true; end
+  def @redis.expire(*); true; end
+  def @redis.watch(*); true; end
+  def @redis.with_connection; yield self; end
+  def @redis.with; yield self; end
+  def @redis.exec; true; end
+  def @redis.ping; 'PONG'; end
+  Sidekiq.instance_variable_set(:@redis, @redis)
+end
+
+def unmock_redis
+  Sidekiq.instance_variable_set(:@redis, REDIS)
+end
+
 #############
 #
 # Below here setup the redis connections you are testing with. Please don't check in 

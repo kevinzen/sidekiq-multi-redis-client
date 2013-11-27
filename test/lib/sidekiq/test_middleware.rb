@@ -1,6 +1,11 @@
 describe 'multi redis middleware' do
     before do
+	  mock_redis
       setup_two_redis_conns
+    end
+
+    after do
+	  #unmock_redis
     end
 
     it 'changes the redis client for each call' do
