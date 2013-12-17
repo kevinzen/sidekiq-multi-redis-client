@@ -1,9 +1,16 @@
 # SidekiqMultiRedisClient [![Build Status](https://travis-ci.org/kevinzen/sidekiq-multi-redis-client.png?branch=master)](https://travis-ci.org/kevinzen/sidekiq-multi-redis-client)
 
-Enable High Availability by having sidekiq clients submit jobs to more than one redis instance
-with different workers. Automatically fail over to one if the other disappears. Spread processing load across all the redis instances.
+The use case for this gem is to provide automatic load-balancing and fail-over of jobs submitted to multiple redis instances, each with its own Sidekiq workers. 
 
-The initial version of this gem/plugin as it now stands allows (in fact requires) you to specify *TWO* redis instances (each of which will have its own worker(s)).
+In our case, we had two data centers -- each of which needs to be available as backup to the other in case the data center becomes unavailable. This gem allows all jobs to automatically get submitted to the remaining data center if one becomes unavailable -- or even if just one of the redis instances goes away. If one of the redis endpoints goes away, then jobs will be submitted to the other one. 
+
+It also spreads processing across both the redis instances.
+
+The initial version of this gem/plugin as it now stands requires you to specify two redis instances (each of which will have its own worker(s)). The gem then 'round robins' submitting jobs to the two redis instances alternating between them.
+
+
+NOTE on unit tests failing. While this sentence remains here in the readme, there are failing unit tests because the travis-ci environment does not have any redis instances connected to it for testing. The tests work on my local machine when I have multiple redis instances available. The tests (for now) assume that redis is available. This will be addressed in a future release soon.
+
 
 ## Installation
 
@@ -34,7 +41,7 @@ end
 
 ```
 
-Not including the *:multi_redis_job => true* line causes Sidekiq to function as it normally would.
+Not including the ```:multi_redis_job => true``` line causes Sidekiq to function as it normally would.
 
 Requiring the gem in your gemfile should be sufficient to enable multi-redis client capability.
 
