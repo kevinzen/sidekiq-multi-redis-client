@@ -1,7 +1,5 @@
 # SidekiqMultiRedisClient [![Build Status](https://travis-ci.org/kevinzen/sidekiq-multi-redis-client.png?branch=master)](https://travis-ci.org/kevinzen/sidekiq-multi-redis-client)
 
-## THIS REPOSITORY IS UNDER DEVELOPMENT. DO NOT USE YET!
-
 Enable High Availability by having sidekiq clients submit jobs to more than one redis instance
 with different workers. Automatically fail over to one if the other disappears. Spread processing load across all the redis instances.
 
@@ -24,10 +22,30 @@ Or install it yourself as:
 All that is required is that you specifically set the sidekiq option for *multi-redis-job* to true like below:
 
 ```ruby
-sidekiq_options multi-redis-job: true
+
+class MultiRedisJob
+  include Sidekiq::Worker
+  sidekiq_options :multi_redis_job => true  # The client code will now submit jobs to two different redis instances!
+  def perform(x)
+  end
+end
+
 ```
 
 Requiring the gem in your gemfile should be sufficient to enable multi-redis client capability.
+
+## Configuring the two redis endpoints
+
+This gem requires you to specify an ARRAY of redis Connections in your redis initializer, like so:
+
+```
+REDIS_1 = Sidekiq::RedisConnection.create(:url => "redis://localhost:6379", :namespace => 'testy')
+REDIS_2 = Sidekiq::RedisConnection.create(:url => "redis://localhost:6380", :namespace => 'testy')
+REDIS_CONNECTION_POOLS = [REDIS_1, REDIS_2]
+
+SidekiqMultiRedisClient::Config.clear_redi_params
+SidekiqMultiRedisClient::Config.redi = REDIS_1_CONNECTION_POOLS
+```
 
 
 ## Contributing
