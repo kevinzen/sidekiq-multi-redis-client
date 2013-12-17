@@ -3,6 +3,8 @@
 Enable High Availability by having sidekiq clients submit jobs to more than one redis instance
 with different workers. Automatically fail over to one if the other disappears. Spread processing load across all the redis instances.
 
+The initial version of this gem/plugin as it now stands allows (in fact requires) you to specify *TWO* redis instances (each of which will have its own worker(s)).
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -32,6 +34,8 @@ end
 
 ```
 
+Not including the *:multi_redis_job => true* line causes Sidekiq to function as it normally would.
+
 Requiring the gem in your gemfile should be sufficient to enable multi-redis client capability.
 
 ## Configuring the two redis endpoints
@@ -46,6 +50,8 @@ REDIS_CONNECTION_POOLS = [REDIS_1, REDIS_2]
 SidekiqMultiRedisClient::Config.clear_redi_params
 SidekiqMultiRedisClient::Config.redi = REDIS_1_CONNECTION_POOLS
 ```
+
+This version of the gem requires two redis endpoints and 'round robins' jobs between them. Future versions of this gem will add more flexibility.
 
 
 ## Contributing
